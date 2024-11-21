@@ -1,0 +1,18 @@
+#!/usr/bin/env lua
+
+local common = require "build_tools.lua.common"
+
+local message, abort = common.build_rom("sonic3k", "skbuilt", "-D Sonic3_Complete=0", "-p=FF -z=0," .. "kosinskiplus" .. ",Size_of_Snd_driver_guess,before", false, "https://github.com/sonicretro/skdisasm")
+
+if message then
+	exit_code = false
+end
+
+if abort then
+	os.exit(exit_code, true)
+end
+
+-- Correct the ROM's header with a proper checksum and end-of-ROM value.
+common.fix_header("skbuilt.bin")
+
+os.exit(exit_code, false)
